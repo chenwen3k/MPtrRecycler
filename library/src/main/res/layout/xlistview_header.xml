@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom" >
+
+    <RelativeLayout
+        android:id="@+id/xlistview_header_content"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical" android:id="@+id/xlistview_header_text">
+
+            <TextView
+                android:id="@+id/xlistview_header_hint_textview"
+                android:layout_width="126dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/xlistview_header_hint_normal" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="3dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/xlistview_header_last_time"
+                    android:textSize="11dp" />
+
+                <TextView
+                    android:id="@+id/xlistview_header_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="11dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <ProgressBar
+            android:id="@+id/progressView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignLeft="@id/xlistview_header_text"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="-40dp"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

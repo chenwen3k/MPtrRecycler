@@ -25,3 +25,21 @@ proguard/
 
 # Log Files
 *.log
+
+# settings
+.settings/
+.classpath
+.project
+config.properties
+.idea/
+local.properties
+.DS_Store
+*.iml
+.gradle
+
+# output
+bin/
+gen/
+out/
+production/
+build/
