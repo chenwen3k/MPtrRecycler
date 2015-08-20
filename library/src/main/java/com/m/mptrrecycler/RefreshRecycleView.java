@@ -39,14 +39,6 @@ public class RefreshRecycleView extends FrameLayout {
 
     private float mLastY = -1; // save event y
 
-    protected RecyclerView.OnScrollListener mOnScrollListener;
-
-    private int mVisibleItemCount = 0;
-    private int mTotalItemCount = 0;
-    private int previousTotal = 0;
-    private int mFirstVisibleItem;
-    private int lastVisibleItemPosition;
-
     public RefreshRecycleView(Context context) {
         super(context);
         initViews();
@@ -71,11 +63,10 @@ public class RefreshRecycleView extends FrameLayout {
         mPtrFrameLayout.setLoadingMinTime(1000);
         mPtrFrameLayout.setDurationToCloseHeader(400);
         // header
-//        final MRecyclerHeader header = new MRecyclerHeader(getContext());
-//        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-//        mPtrFrameLayout.setHeaderView(header);
-        mPtrFrameLayout.setRatioOfHeaderHeightToRefresh(0.5f);
-//        mPtrFrameLayout.addPtrUIHandler(header);
+        final MRecyclerHeader header = new MRecyclerHeader(getContext());
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        mPtrFrameLayout.setHeaderView(header);
+        mPtrFrameLayout.addPtrUIHandler(header);
 
         mPtrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
             @Override
@@ -91,52 +82,6 @@ public class RefreshRecycleView extends FrameLayout {
             }
         });
         mScroller = new Scroller(getContext(), new DecelerateInterpolator());
-        mRecyclerView.removeOnScrollListener(mOnScrollListener);
-        mOnScrollListener = new RecyclerView.OnScrollListener() {
-            private int[] lastPositions;
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (mRecyclerView.canScrollVertically(1)) {
-
-                }
-//                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-//                mVisibleItemCount = layoutManager.getChildCount();
-//                mTotalItemCount = layoutManager.getItemCount();
-//
-//                if (layoutManagerType == null) {
-//                    if (layoutManager instanceof GridLayoutManager) {
-//                        layoutManagerType = LAYOUT_MANAGER_TYPE.GRID;
-//                    } else if (layoutManager instanceof LinearLayoutManager) {
-//                        layoutManagerType = LAYOUT_MANAGER_TYPE.LINEAR;
-//                    } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-//                        layoutManagerType = LAYOUT_MANAGER_TYPE.STAGGERED_GRID;
-//                    } else {
-//                        throw new RuntimeException("Unsupported LayoutManager used. Valid ones are LinearLayoutManager, GridLayoutManager and StaggeredGridLayoutManager");
-//                    }
-//                }
-//
-//                switch (layoutManagerType) {
-//                    case LINEAR:
-//                    case GRID:
-//                        lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-//                        mFirstVisibleItem = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
-//                        break;
-//                    case STAGGERED_GRID:
-//                        StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
-//                        if (lastPositions == null)
-//                            lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
-//
-//                        staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
-//                        lastVisibleItemPosition = findMax(lastPositions);
-//                        staggeredGridLayoutManager.findFirstVisibleItemPositions(lastPositions);
-//                        mFirstVisibleItem = findMin(lastPositions);
-//                        break;
-//                }
-            }
-        };
-        mRecyclerView.addOnScrollListener(mOnScrollListener);
     }
 
     @Override

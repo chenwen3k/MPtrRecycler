@@ -10,8 +10,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,9 +27,6 @@ public class MRecyclerHeader extends LinearLayout implements PtrUIHandler {
     private TextView refreshTimeView;
     private int mState = STATE_NORMAL;
     private ProgressBar progressView;
-
-    private Animation mRotateUpAnim;
-    private Animation mRotateDownAnim;
 
     private final int ROTATE_ANIM_DURATION = 180;
 
@@ -56,7 +52,7 @@ public class MRecyclerHeader extends LinearLayout implements PtrUIHandler {
     private void initView(Context context) {
         // 初始情况，设置下拉刷新view高度为0
         LayoutParams lp = new LayoutParams(
-                LayoutParams.MATCH_PARENT, 0);
+                LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mContainer = (LinearLayout) LayoutInflater.from(context).inflate(
                 R.layout.xlistview_header, null, false);
         addView(mContainer, lp);
@@ -65,16 +61,6 @@ public class MRecyclerHeader extends LinearLayout implements PtrUIHandler {
         mHintTextView = (TextView) findViewById(R.id.xlistview_header_hint_textview);
         refreshTimeView = (TextView) findViewById(R.id.xlistview_header_time);
         progressView = (ProgressBar) findViewById(R.id.progressView);
-        mRotateUpAnim = new RotateAnimation(0.0f, -180.0f,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                0.5f);
-        mRotateUpAnim.setDuration(ROTATE_ANIM_DURATION);
-        mRotateUpAnim.setFillAfter(true);
-        mRotateDownAnim = new RotateAnimation(-180.0f, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                0.5f);
-        mRotateDownAnim.setDuration(ROTATE_ANIM_DURATION);
-        mRotateDownAnim.setFillAfter(true);
     }
 
     public void setState(int state) {
@@ -102,11 +88,11 @@ public class MRecyclerHeader extends LinearLayout implements PtrUIHandler {
                 mHintTextView.setText(R.string.xlistview_header_hint_normal);
                 break;
             case STATE_READY:
-                if (mState != STATE_READY) {
+//                if (mState != STATE_READY) {
 //				mArrowImageView.clearAnimation();
 //				mArrowImageView.startAnimation(mRotateUpAnim);
                     mHintTextView.setText(R.string.xlistview_header_hint_ready);
-                }
+//                }
                 break;
             case STATE_REFRESHING:
                 mHintTextView.setText(R.string.xlistview_header_hint_loading);
@@ -115,15 +101,6 @@ public class MRecyclerHeader extends LinearLayout implements PtrUIHandler {
         }
 
         mState = state;
-    }
-
-    public void setVisiableHeight(int height) {
-        if (height < 0)
-            height = 0;
-        LayoutParams lp = (LayoutParams) mContainer
-                .getLayoutParams();
-        lp.height = height;
-        mContainer.setLayoutParams(lp);
     }
 
     public int getVisiableHeight() {
@@ -143,7 +120,7 @@ public class MRecyclerHeader extends LinearLayout implements PtrUIHandler {
 
     @Override
     public void onUIRefreshPrepare(PtrFrameLayout frame) {
-        setState(STATE_READY);
+        setState(STATE_NORMAL);
     }
 
     @Override
@@ -158,5 +135,18 @@ public class MRecyclerHeader extends LinearLayout implements PtrUIHandler {
 
     @Override
     public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
+        final int mOffsetToRefresh = frame.getOffsetToRefresh();
+        final int currentPos = ptrIndicator.getCurrentPosY();
+        final int lastPos = ptrIndicator.getLastPosY();
+
+        if (currentPos < mOffsetToRefresh && lastPos >= mOffsetToRefresh) {
+            if (isUnderTouch && status == PtrFrameLayout.PTR_STATUS_PREPARE) {
+                setState(STATE_NORMAL);
+            }
+        } else if (currentPos > mOffsetToRefresh && lastPos <= mOffsetToRefresh) {
+            if (isUnderTouch && status == PtrFrameLayout.PTR_STATUS_PREPARE) {
+                setState(STATE_READY);
+            }
+        }
     }
 }
